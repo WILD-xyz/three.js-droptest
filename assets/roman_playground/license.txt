@@ -1,8 +1,0 @@
-Model Information:
-* title:	Roman Playground
-* source:	https://sketchfab.com/3d-models/roman-playground-378fa6bc7adb472997dc3c096682266b
-* author:	gokcenyuksek (https://sketchfab.com/gokcenyuksek)
-
-Model License:
-* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
-* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
