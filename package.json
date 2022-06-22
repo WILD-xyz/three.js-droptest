@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "gh-pages -d three.js-droptest"
+    "serve": "npm run build && vite preview"
   },
   "dependencies": {
     "gh-pages": "^4.0.0",
