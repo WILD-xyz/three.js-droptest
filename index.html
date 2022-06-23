@@ -1,17 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" crossorigin src="/three.js-droptest/assets/index.fc97696b.js"></script>
-    <link rel="modulepreload" href="/three.js-droptest/assets/vendor.5ade6ed4.js">
-    <link rel="stylesheet" href="/three.js-droptest/assets/index.458f9883.css">
-  </head>
-  <body>
-    <div id="root"></div>
+<html>
+<head>
+<!-- three.min.js r87 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+
+<!-- GLTFLoader.js -->
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r92/examples/js/loaders/GLTFLoader.js"></script>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #000;
+}
+</style>
+</head>
+
+<body>
+
+    <script>
+
+
+var scene, renderer;
+var camera;
+var mesh;
+
+var isMouseDown = false;
+ 
+function init() {
     
-  </body>
+    //シーンを作成
+    scene = new THREE.Scene(); 
+    
+    //カメラを作成
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 ); 
+    camera.position.z = 25; 
+    camera.position.y = 15; 
+    
+    //レンダラーを作成
+    renderer = new THREE.WebGLRenderer(); 
+    renderer.setSize( window.innerWidth, window.innerHeight ); 
+    document.body.appendChild( renderer.domElement ); 
+    //背景色を設定
+    renderer.setClearColor(0x00ffff, 1); 
+    renderer.gammaOutput = true;
+    
+    //光源を作成
+    var light = new THREE.DirectionalLight("#c1582d", 1);
+    var ambient = new THREE.AmbientLight("#85b2cd");
+    light.position.set( 0, -70, 100 ).normalize();
+    scene.add(light);
+    scene.add(ambient);
+
+    var texture = new THREE.Texture();
+    var manager = new THREE.LoadingManager();
+    manager.onProgress = function ( item, loaded, total ) {};
+    var onProgress = function ( xhr ) {};
+    var onError = function ( xhr ) {};
+
+    // 3Dモデル用テクスチャ画像の読込
+    var loader = new THREE.GLTFLoader();
+
+    // Load a glTF resource
+    loader.load(
+        // resource URL
+        './assets/roman_playground/scene.gltf',
+        // called when the resource is loaded
+        function ( gltf ) {
+
+                mesh = gltf.scene;
+                mesh.scale.set( 10, 10, 10 );
+                scene.add( mesh );
+    
+                //scene.add( gltf.scene );
+
+                //gltf.animations; // Array<THREE.AnimationClip>
+                //gltf.scene; // THREE.Scene
+                //gltf.scenes; // Array<THREE.Scene>
+                //gltf.cameras; // Array<THREE.Camera>
+                //gltf.asset; // Object
+
+        },
+        // called when loading is in progresses
+        function ( xhr ) {
+
+                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+        },
+        // called when loading has errors
+        function ( error ) {
+
+                console.log( 'An error happened' );
+
+        }
+    );
+    
+    document.addEventListener("mousedown", onMouseDown);
+    document.addEventListener("touchstart", onMouseDown);
+    document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("touchend", onMouseUp);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("touchmove", onMouseMove);
+
+    render();   
+}
+
+function render() {
+    requestAnimationFrame( render ); 
+    renderer.render(scene, camera); 
+}
+
+
+// マウスを押したとき
+function onMouseDown(event) {
+    isMouseDown = true;
+}
+
+// マウスを動かした時
+function onMouseMove(event) {
+    if (isMouseDown) {
+        // 3DモデルをX軸とY軸方向に回転させます
+        if ( mesh ) {
+            mesh.rotation.y = getMouseX(event)/50;
+            mesh.rotation.x = getMouseY(event)/50;
+
+        }
+    }
+}
+
+// マウスを離したとき
+function onMouseUp(event) {
+    isMouseDown = false;
+}
+
+function getMouseX(event) {
+    if (event.type.indexOf("touch") == -1)
+        return event.clientX;
+    else
+        return event.touches[0].clientX;
+}
+
+function getMouseY(event) {
+    if (event.type.indexOf("touch") == -1)
+        return event.clientY;
+    else
+        return event.touches[0].clientY;
+}
+
+window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body>
+
 </html>
